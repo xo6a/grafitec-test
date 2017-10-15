@@ -150,6 +150,7 @@ class Application
                 'result' => false,
                 'progClassName' => $progName,
                 'progFullName' => $progression->getName(),
+                'failElement' => $progression->getFailElement(),
                 'error' => [
                     'message' => $e->getMessage(),
                 ],
