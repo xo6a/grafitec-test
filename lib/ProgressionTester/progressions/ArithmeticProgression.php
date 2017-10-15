@@ -10,6 +10,8 @@ class ArithmeticProgression extends AbstractProgression
 
     protected function getDelta($input, $i)
     {
-        return 0;
+        if (!isset($input[$i]) || !isset($input[$i + 1]))
+            return null;
+        return $input[$i] - $input[$i + 1];
     }
 }

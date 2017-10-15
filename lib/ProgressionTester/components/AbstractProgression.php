@@ -7,11 +7,17 @@ abstract class AbstractProgression
 
     protected $input;
     protected $delta;
+    protected $failElement;
     protected $name = 'Абстракная прогрессия';
 
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getFailElement()
+    {
+        return $this->failElement;
     }
 
     public function validate($input)
@@ -29,7 +35,7 @@ abstract class AbstractProgression
     protected function validateInput($input)
     {
         $validate = $this->isInputValid($input);
-        if ($validate == null) {
+        if ($validate === null) {
             throw new \Exception('Progression is to short.');
         } else {
             return $validate;
@@ -40,6 +46,7 @@ abstract class AbstractProgression
     {
         $valid = null;
         foreach ($input as $key => $item) {
+            $this->failElement = "№$key $item";
             if ($key == 0)
                 continue;
             if ($this->getDelta($input, $key) === null)

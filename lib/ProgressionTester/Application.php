@@ -43,10 +43,10 @@ class Application
         try {
             global $argv;
             @$args = $argv[1];
-            $this->input = $this->parseProgression($args);
+            $this->parseProgression($args);
             $this->addProgressionAll();
             $this->testAll();
-            $data = $this->prepareData();
+            $data = $this->prepareResult();
             $this->render('cli', $data);
         } catch (\Exception $e) {
             $this->log('Error: ' . $e->getMessage());
@@ -69,7 +69,7 @@ class Application
             $this->render('help');
             throw new \Exception('Not valid args. Not enough arguments.');
         }
-        return $args;
+        $this->input = $args;
     }
 
     public function addProgressionAll()
@@ -139,18 +139,20 @@ class Application
     {
         try {
             $result = $progression->validate($this->input);
-            $this->result[] = [
+            $this->result[$progName] = [
                 'result' => $result,
                 'progClassName' => $progName,
                 'progFullName' => $progression->getName(),
+                'failElement' => $progression->getFailElement(),
             ];
         } catch (\Exception $e) {
-            $this->result[] = [
+            $this->result[$progName] = [
                 'result' => false,
                 'progClassName' => $progName,
                 'progFullName' => $progression->getName(),
-                'error' => true,
-                'errorMessage' => $e->getMessage(),
+                'error' => [
+                    'message' => $e->getMessage(),
+                ],
             ];
         }
     }
@@ -168,9 +170,9 @@ class Application
         include $path;
     }
 
-    public function prepareData()
+    public function prepareResult()
     {
-        return $this->getResult();;
+        return $this->getResult();
     }
 
     public function log($message, $level = 0, array $context = [])
