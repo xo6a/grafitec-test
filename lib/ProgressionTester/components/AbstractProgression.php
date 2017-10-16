@@ -67,5 +67,14 @@ abstract class AbstractProgression
         return $delta;
     }
 
+    protected function isSetRange($input, $min, $max)
+    {
+        foreach (range($min, $max) as $i) {
+            if (!isset($input[$i]))
+                return false;
+        }
+        return true;
+    }
+
     protected abstract function getDelta($input, $i);
 }

@@ -5,37 +5,36 @@ require(__DIR__ . '/lib/debug.php');
 
 global $argv;
 $app = new ProgressionTester\Application();
+$app->addProgressionAll();
 try {
-    $app->addProgressionAll();
     $app->log('Arithmetic Progression');
+    $progName = 'ArithmeticProgression';
+    $results = $app->dropResult();
     //success
     $args = '1,2,3,4,5';
-    $app->parseProgression($args);
-    $app->testAll();
-    $results = $app->getResult();
-    foreach ($results as $progName => $result) {
-        if ($progName != 'ArithmeticProgression')
-            continue;
-        if ($result['result'] === true) {
-            $app->log("[success] test string = $args");
-        } else {
-            $app->log("[fail] test string = $args");
-        }
-    }
+    runTest($app, $args, $progName, true);
     //fail
     $args = '1,2,55,4,5';
-    $app->parseProgression($args);
-    $app->testAll();
-    $results = $app->getResult();
-    foreach ($results as $progName => $result) {
-        if ($progName != 'ArithmeticProgression')
-            continue;
-        if ($result['result'] === false) {
-            $app->log("[success] test string = $args");
-        } else {
-            $app->log("[fail] test string = $args");
-        }
-    }
+    runTest($app, $args, $progName, false);
 } catch (\Exception $e) {
     $app->log('Error: ' . $e->getMessage());
+}
+
+/**
+ * @param $app ProgressionTester\Application
+ * @param $args
+ * @param $progName
+ * @param $expectedResult
+ */
+function runTest($app, $args, $progName, $expectedResult)
+{
+    $app->parseProgression($args);
+    $app->test($progName);
+    $result = $app->getResult();
+    $result = $result[$progName];
+    if ($result['result'] === $expectedResult) {
+        $app->log("[success] test string = $args");
+    } else {
+        $app->log("[fail] test string = $args");
+    }
 }

@@ -163,6 +163,11 @@ class Application
         return $this->result;
     }
 
+    public function dropResult()
+    {
+        return $this->result = [];
+    }
+
     public function render($view, $data = [])
     {
         $path = __DIR__ . "/views/$view.php";
