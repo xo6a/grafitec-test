@@ -6,8 +6,12 @@ use ProgressionTester\components\AbstractProgression;
 
 class HarmonicProgression extends AbstractProgression
 {
-    protected $name = 'Гармоническая прогрессия';
+    /** @inheritdoc */
+    protected $name = 'Harmonic progression';
 
+    /**
+     * @inheritdoc
+     */
     protected function getDelta($input, $i)
     {
         if (!$this->isSetRange($input, $i, $i + 1))

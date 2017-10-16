@@ -2,13 +2,13 @@
 
 foreach ($data as $result) {
     if ($result['result']) {
-        $this->log('Данная последовательность символов ' . $result['progFullName']);
+        $this->log('This sequence of characters ' . $result['progFullName']);
     } else {
-        $this->log('Данная последовательность символов НЕ ' . $result['progFullName']);
-        $this->log('Ошибка на элементе последовательности ' . $result['failElement']);
+        $this->log('This sequence of characters is NOT ' . $result['progFullName']);
+        $this->log('Php class name: ' . $result['progClassName']);
+        $this->log('Error on the element of the sequence ' . $result['failElement']);
     }
-    $this->log('Имя php класса: ' . $result['progClassName']);
     if (isset($result['error'])) {
-        $this->log('Ошибка: ' . $result['error']['message']);
+        $this->log('Error: ' . $result['error']['message']);
     }
 }

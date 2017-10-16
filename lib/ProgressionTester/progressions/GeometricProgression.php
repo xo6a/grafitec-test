@@ -6,8 +6,12 @@ use ProgressionTester\components\AbstractProgression;
 
 class GeometricProgression extends AbstractProgression
 {
-    protected $name = 'Геометрическое прогрессия';
+    /** @inheritdoc */
+    protected $name = 'Geometric progression';
 
+    /**
+     * @inheritdoc
+     */
     protected function getDelta($input, $i)
     {
         if (!$this->isSetRange($input, $i, $i + 1))

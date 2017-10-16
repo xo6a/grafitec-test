@@ -6,15 +6,23 @@ use ProgressionTester\components\AbstractProgression;
 
 class Application
 {
+    /** @var */
     private $input;
+    /** @var */
     private $progressions = [];
+    /** @var */
     private $result;
+    /** @var */
     private $progressionClassNamespace = '\\ProgressionTester\\progressions\\';
 
-    const INTERFACE_CLI = 'cli';
-    const INTERFACE_HTTP = 'http';
-    const INTERFACE_UNDEFINED = 'undefined';
+    const INTERFACE_CLI = 'cli'; //код интерфейса командой строки
+    const INTERFACE_HTTP = 'http'; //код интерфейса веб
+    const INTERFACE_UNDEFINED = 'undefined'; //код неизвестного интерфейса
 
+    /**
+     * Запуск приложения
+     * @return bool
+     */
     public function run()
     {
         switch ($this->getPhpInterface()) {
@@ -28,6 +36,10 @@ class Application
         return false;
     }
 
+    /**
+     * Определить код интерфейса
+     * @return string
+     */
     public function getPhpInterface()
     {
         switch (php_sapi_name()) {
@@ -38,6 +50,9 @@ class Application
         return self::INTERFACE_UNDEFINED;
     }
 
+    /**
+     * Запуск приложения из консоли
+     */
     public function runCli()
     {
         try {
@@ -53,11 +68,19 @@ class Application
         }
     }
 
+    /**
+     * Запуск приложения из веб
+     */
     public function runHttp()
     {
         //todo use this for http response
     }
 
+    /**
+     * Парсинг ряда потенциальной прогрессии из массива
+     * @param $args string строка с рядом элементов, разделенных запятыми, на проверку, является ли она прогрессией
+     * @throws \Exception
+     */
     public function parseProgression($args)
     {
         if (!$args) {
@@ -72,6 +95,9 @@ class Application
         $this->input = $args;
     }
 
+    /**
+     * Найти и добавить все прогрессии в лист проверки
+     */
     public function addProgressionAll()
     {
         $path = $this->getProgressionDirPath();
@@ -87,11 +113,20 @@ class Application
         }
     }
 
+    /**
+     * Получить абсалютный путь к папке с прогрессиями
+     * @return string абсалютный путь к папке с прогрессиями
+     */
     public function getProgressionDirPath()
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'progressions' . DIRECTORY_SEPARATOR;
     }
 
+    /**
+     * Получить имя файла
+     * @param $file string абсалютный путь к файлу
+     * @return null|string
+     */
     public function parseProgressionName($file)
     {
         $strPos = strpos($file, '.php');
@@ -101,12 +136,22 @@ class Application
         return substr($file, 0, $strPos);
     }
 
+    /**
+     * Добавить прогрессию в лист проверки
+     * @param $progName string навазвание класса прогрессии
+     */
     public function addProgression($progName)
     {
         $progression = $this->getProgressionObject($progName);
         $this->progressions[$progName] = $progression;
     }
 
+    /**
+     * Добавить объект прогрессии в лист проверки
+     * @param $progName string навазвание класса прогрессии
+     * @return AbstractProgression объект прогрессии
+     * @throws \Exception
+     */
     public function getProgressionObject($progName)
     {
         $progClassName = $this->getProgressionClassName($progName);
@@ -117,17 +162,29 @@ class Application
         return $progression;
     }
 
+    /**
+     * Получить имя класса прогресии по её имени с неймспейсом
+     * @param $progName string навазвание класса прогрессии
+     * @return string
+     */
     public function getProgressionClassName($progName)
     {
         return $this->progressionClassNamespace . $progName;
     }
 
+    /**
+     * Протестировать ряд на прогрессию
+     * @param $progName string навазвание класса прогрессии
+     */
     public function test($progName)
     {
         $progression = $this->getProgressionObject($progName);
         $this->runTest($progName, $progression);
     }
 
+    /**
+     * Протестировать ряд на все прогрессии в листе
+     */
     public function testAll()
     {
         foreach ($this->progressions as $progName => $progression) {
@@ -135,6 +192,11 @@ class Application
         }
     }
 
+    /**
+     * Получить результаты тестирования ряда на прогрессию
+     * @param $progName string название класса прогрессии
+     * @param $progression AbstractProgression объект прогрессии
+     */
     public function runTest($progName, AbstractProgression $progression)
     {
         try {
@@ -158,16 +220,30 @@ class Application
         }
     }
 
+    /**
+     * Получить результат
+     * @return array [прогрессия => [результаты]]
+     */
     public function getResult()
     {
         return $this->result;
     }
 
+    /**
+     * Сброс результатов
+     * @return array
+     */
     public function dropResult()
     {
         return $this->result = [];
     }
 
+    /**
+     * Вывод данных
+     * @param $view
+     * @param array $data
+     * @throws \Exception
+     */
     public function render($view, $data = [])
     {
         $path = __DIR__ . "/views/$view.php";
@@ -176,11 +252,22 @@ class Application
         include $path;
     }
 
+    /**
+     * Получить результаты
+     * @return mixed
+     */
     public function prepareResult()
     {
         return $this->getResult();
     }
 
+    /**
+     * Функция логирования
+     * todo использовать отдельный класс логгера
+     * @param $message string сообщение
+     * @param $level int код ошибки
+     * @param $context array
+     */
     public function log($message, $level = 0, array $context = [])
     {
         //todo use logger class instead function
