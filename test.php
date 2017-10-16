@@ -16,6 +16,16 @@ try {
     //fail
     $args = '1,2,55,4,5';
     runTest($app, $args, $progName, false);
+
+    $app->log('Geometric Progression');
+    $progName = 'GeometricProgression';
+    $results = $app->dropResult();
+    //success
+    $args = '1,2,4,8,16';
+    runTest($app, $args, $progName, true);
+    //fail
+    $args = '1,2,3,4,5';
+    runTest($app, $args, $progName, false);
 } catch (\Exception $e) {
     $app->log('Error: ' . $e->getMessage());
 }
