@@ -5,7 +5,6 @@ namespace ProgressionTester\components;
 abstract class AbstractProgression
 {
 
-    protected $input;
     protected $delta;
     protected $failElement;
     protected $name = 'Абстракная прогрессия';
@@ -22,7 +21,7 @@ abstract class AbstractProgression
 
     public function validate($input)
     {
-        $this->input = $this->prepareInput($input);
+        $input = $this->prepareInput($input);
         $this->delta = $this->getStandardDelta($input);
         return $this->validateInput($input);
     }
