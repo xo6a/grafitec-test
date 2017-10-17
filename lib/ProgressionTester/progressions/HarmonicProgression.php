@@ -16,33 +16,31 @@ class HarmonicProgression extends AbstractProgression
     {
         if (!$this->isSetRange($input, $i, $i + 1))
             return null;
+        if ($input[$i] - $input[$i + 1] != -1)
+            throw new \Exception('delta is not valid');
         return $input[$i] - $input[$i + 1];
     }
 
     /**
      * @inheritdoc
      */
-    protected function prepareInput($input)
+    protected function prepareInputItem($item)
     {
-        $newInput = [];
-        foreach ($input as $item) {
-            if ($this->getFractionDenominator($item) === null)
-                throw new \Exception($item . ' is not fraction');
-            $newInput[] = $this->getFractionDenominator($item);
-        }
-        return $newInput;
+        $item = $this->getFractionDenominator($item);
+        return parent::prepareInputItem($item);
     }
 
     /**
      * Получить знаменатель
      * @param $fraction string
-     * @return null|int
+     * @return int|null
+     * @throws \Exception
      */
     protected function getFractionDenominator($fraction)
     {
-        $fraction = explode('/', $fraction);
-        if (!isset($fraction[1]))
-            return null;
-        return $fraction[1];
+        $fractionAr = explode('/', $fraction);
+        if (!is_numeric($fractionAr[0]) || $fractionAr[0] != 1 || !isset($fractionAr[1]) || !is_numeric($fractionAr[1]))
+            throw new \Exception("$fraction is not valid element");
+        return $fractionAr[1];
     }
 }

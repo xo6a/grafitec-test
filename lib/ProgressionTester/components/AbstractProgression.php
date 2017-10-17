@@ -43,13 +43,31 @@ abstract class AbstractProgression
     }
 
     /**
-     * Обработка инпута перед запуском
+     * Преобразование и проверка ряда перед запуском
      * @param $input
      * @return mixed
+     * @throws \Exception
      */
     protected function prepareInput($input)
     {
-        return $input;
+        $newInput = [];
+        foreach ($input as $item) {
+            $newInput[] = $this->prepareInputItem($item);
+        }
+        return $newInput;
+    }
+
+    /**
+     * Преобразование и проверка элемента ряда
+     * @param $item
+     * @return mixed
+     * @throws \Exception
+     */
+    protected function prepareInputItem($item)
+    {
+        if (!is_numeric($item))
+            throw new \Exception("'$item' is not valid progression element");
+        return $item;
     }
 
     /**
@@ -80,9 +98,10 @@ abstract class AbstractProgression
             $this->setFailElement($key, $item);
             if ($key == 0)
                 continue;
-            if ($this->getDelta($input, $key) === null)
+            $delta = $this->getDelta($input, $key);
+            if ($delta === null)
                 return $valid;
-            if ($this->getDelta($input, $key) == $this->delta)
+            if (bccomp($delta, $this->delta, 16) == 0)
                 $valid = true;
             else
                 return false;

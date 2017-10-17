@@ -58,14 +58,32 @@ class Application
         try {
             global $argv;
             @$args = $argv[1];
+            @$debug = $argv[2];
+            if ($debug === '1')
+                $this->turnOnDebug();
             $this->parseProgression($args);
             $this->addProgressionAll();
             $this->testAll();
             $data = $this->prepareResult();
-            $this->render('cli', $data);
+            if ($this->isDebug())
+                $this->render('cli_debug', $data);
+            else
+                $this->render('cli', $data);
         } catch (\Exception $e) {
             $this->log('Error: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Включить режим debug
+     */
+    public function turnOnDebug()
+    {
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+        if (!defined('DEBUG'))
+            define('DEBUG', true);
     }
 
     /**
@@ -277,6 +295,11 @@ class Application
             else
                 echo $message . PHP_EOL;
         }
+    }
+
+    public function isDebug()
+    {
+        return (defined('DEBUG') && DEBUG === true);
     }
 
 }

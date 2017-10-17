@@ -18,4 +18,14 @@ class GeometricProgression extends AbstractProgression
             return null;
         return $input[$i] / $input[$i + 1];
     }
+
+    /**
+     * @inheritdoc
+     */
+    protected function prepareInputItem($item)
+    {
+        if ($item == 0)
+            throw new \Exception("'$item' is not valid progression element");
+        return parent::prepareInputItem($item);
+    }
 }
