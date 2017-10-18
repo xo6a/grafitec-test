@@ -66,7 +66,9 @@ abstract class AbstractProgression
     protected function prepareInputItem($item)
     {
         if (!is_numeric($item))
-            throw new \Exception("'$item' is not valid progression element");
+            throw new \Exception("'$item' is not valid progression element. It must be number.");
+        if ($item[0] == '0' && strlen($item) > 1)
+            throw new \Exception("'$item' is not valid progression element. It can't start from zero.");
         return $item;
     }
 
